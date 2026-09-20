@@ -1,0 +1,11 @@
+# In Git, not running, until you create it from the Drift screen.
+apiVersion: v1
+kind: Service
+metadata:
+  name: shop-frontend
+  namespace: shop
+spec:
+  selector: { app: shop-frontend }
+  ports:
+    - port: 80
+      targetPort: 80

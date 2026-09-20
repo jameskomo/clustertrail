@@ -1,0 +1,17 @@
+# Deliberately behind the cluster: no env, no probes, no mounts. Scanning this
+# directory against the kind cluster reports checkout as "differs from Git".
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: checkout
+  namespace: shop
+spec:
+  replicas: 4
+  selector: { matchLabels: { app: checkout } }
+  template:
+    metadata: { labels: { app: checkout } }
+    spec:
+      containers:
+        - name: web
+          image: nginx:1.27-alpine
+          ports: [{ containerPort: 80, name: http }]

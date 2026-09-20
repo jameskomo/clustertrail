@@ -1,0 +1,127 @@
+# Builds one self-contained binary per platform and attaches them to a
+# GitHub Release. The interface is compiled into each binary, so what a user
+# downloads is a single file with nothing to install and nothing to sign.
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+# Nothing here gets more than it needs. The two jobs that run third-party
+# code (npm install scripts, go test) get a read-only token; only the job
+# that publishes can write.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    strategy:
+      matrix:
+        include:
+          - { goos: linux,   goarch: amd64, name: linux-x86_64 }
+          - { goos: linux,   goarch: arm64, name: linux-arm64 }
+          - { goos: darwin,  goarch: amd64, name: macos-intel }
+          - { goos: darwin,  goarch: arm64, name: macos-apple-silicon }
+          - { goos: windows, goarch: amd64, name: windows-x86_64, ext: .exe }
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with:
+          go-version: "1.27"
+          cache-dependency-path: engine/go.sum
+
+      # The interface is identical on every platform, so build it once and
+      # embed the same output into each binary.
+      - name: Build the interface
+        run: |
+          cd app
+          npm ci
+          npm run build
+          rm -rf ../engine/internal/ui/dist
+          cp -r dist ../engine/internal/ui/dist
+
+      - name: Build the binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          CGO_ENABLED: "0"
+        run: |
+          cd engine
+          go build -trimpath \
+            -ldflags "-s -w -X main.version=${GITHUB_REF_NAME:-dev}" \
+            -o "../clustertrail-${{ matrix.name }}${{ matrix.ext }}" ./cmd/clustertrail
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: clustertrail-${{ matrix.name }}
+          path: clustertrail-${{ matrix.name }}${{ matrix.ext }}
+
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with: { go-version: "1.27", cache-dependency-path: engine/go.sum }
+      - run: cd engine && go vet ./... && go test ./...
+
+  release:
+    needs: [build, test]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      # Provenance: the digest of each binary is signed by an identity bound
+      # to this repository and this workflow. A checksums file published
+      # beside the artefact proves nothing, because whoever could replace one
+      # could replace both.
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with: { path: artifacts, merge-multiple: true }
+      - name: Checksums
+        run: cd artifacts && sha256sum clustertrail-* > checksums.txt && cat checksums.txt
+      - uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2
+        with:
+          subject-path: artifacts/clustertrail-*
+      - uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          files: artifacts/*
+          generate_release_notes: true
+          body: |
+            One file. No installer, no Node, nothing to configure.
+
+            Download the build for your machine, make it executable, and run it:
+
+            ```
+            chmod +x clustertrail-*
+            ./clustertrail-* serve --open
+            ```
+
+            Your browser opens on the interface. ClusterTrail reads your existing
+            kubeconfig and can only see and do what your own credentials allow.
+
+            These binaries are not code-signed, so macOS and Windows will warn
+            the first time. The install guide in the repository has the two
+            clicks that takes.
+
+            Each binary carries build provenance signed by GitHub, which is
+            worth more than the checksum file beside it. To check that what
+            you downloaded is what this workflow built:
+
+            ```
+            gh attestation verify clustertrail-<your-platform> --repo jameskomo/clustertrail
+            ```

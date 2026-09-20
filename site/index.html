@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ClusterTrail: git blame for your running clusters</title>
+<meta name="description" content="Every change to a Kubernetes cluster: what changed, who changed it, what has drifted from Git, and nothing applied that nobody approved. One binary, no installer." />
+<meta property="og:title" content="ClusterTrail" />
+<meta property="og:description" content="Git blame for your running clusters. One binary, no installer, nothing in your cluster." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><circle cx='8' cy='8' r='6' fill='none' stroke='%238b5cf6' stroke-width='1.6'/><circle cx='8' cy='8' r='1.8' fill='%238b5cf6'/></svg>" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist@5.3.0/index.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/geist-mono@5.3.0/index.min.css" />
+<link rel="stylesheet" href="style.css?v=d65f8388" />
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="#top"><span class="dot"></span>ClusterTrail</a>
+  <nav>
+    <a href="#what">What it does</a>
+    <a href="#install">Install</a>
+    <a href="#trust">Trust</a>
+    <a href="#status">Status</a>
+    <a href="/demo/">Demo</a>
+    <a class="gh" href="https://github.com/jameskomo/clustertrail" rel="noopener"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>GitHub</a>
+  </nav>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <p class="eyebrow">A Kubernetes client that remembers</p>
+  <h1>Git blame for your<br /><em>running</em> clusters.</h1>
+  <p class="lede">
+    Something changed at 3am and nobody remembers doing it. ClusterTrail answers
+    the question your monitoring cannot: <strong>what changed, who changed it,
+    what has drifted from Git</strong>. And it refuses to apply anything nobody
+    approved.
+  </p>
+  <div class="cta">
+    <a class="btn" href="/demo/">Try it in your browser</a>
+    <a class="btn ghost" href="https://github.com/jameskomo/clustertrail" rel="noopener"><svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>Read the source</a>
+    <code class="run">./clustertrail serve --open</code>
+  </div>
+  <p class="sub">
+    The demo is the real interface on a real cluster, recorded. One binary to run it
+    on yours: no installer, no Node, nothing in your cluster.
+  </p>
+</section>
+
+<figure class="shot wide">
+  <a href="/demo/"><img src="img/timeline.png?v=45e282db" alt="The What changed screen, listing rollouts, field writes with the person who made them, cluster events and approved changes in one timeline" loading="lazy" width="1600" height="1000" /></a>
+  <figcaption>Every change in one timeline. The <code>kubectl-client-side-apply</code> on the right is the actual person who edited that ConfigMap.</figcaption>
+</figure>
+
+<section id="what" class="answers">
+  <h2>Four questions, answered in one place</h2>
+  <div class="grid">
+    <article>
+      <h3>What changed in the last hour?</h3>
+      <p>
+        Rollouts with the image that actually moved, the fields people edited,
+        cluster events, and every change you approved, merged into one ordered
+        list. The actor comes from <code>managedFields</code>, which Kubernetes
+        writes on every object and almost nothing surfaces.
+      </p>
+      <p class="note">Tick <em>People only</em> and a hundred lines become three.</p>
+    </article>
+    <article>
+      <h3>What has drifted from Git?</h3>
+      <p>
+        Point it at the directory your cluster is deployed from. You get what is
+        in Git but not running, what differs, and what is running with no file
+        behind it. Plain YAML, Kustomize overlays and Helm charts all render.
+      </p>
+      <p class="note">The same check runs in CI and exits non-zero on drift.</p>
+    </article>
+    <article>
+      <h3>Who approved this?</h3>
+      <p>
+        Every write is proposed first: a real diff from a server-side dry run, the
+        blast radius, then a human decision. Each step lands in an append-only log
+        where every entry carries the fingerprint of the one before it.
+      </p>
+      <p class="note">Scale, restart, delete, edit, roll back. Same gate.</p>
+    </article>
+    <article>
+      <h3>Can AI help without breaking anything?</h3>
+      <p>
+        There is an explain pane, and an MCP server your coding agent can read
+        clusters through. Neither can write. The tools that change a cluster are
+        not in the interface the model sees, so there is nothing to switch off
+        and nothing to trust the model about.
+      </p>
+      <p class="note">That is the version a security team approves.</p>
+    </article>
+  </div>
+</section>
+
+<section class="feature">
+  <div class="text">
+    <h2>It is also the client you keep open</h2>
+    <p>
+      A tool you do not use daily cannot be the one that catches the change nobody
+      remembers making. So it does the ordinary job properly: every workload kind
+      plus custom resources, live tables, logs that follow, a terminal, port
+      forwards, a YAML editor.
+    </p>
+    <p>
+      Tables paint from cache in about eight milliseconds, before any cluster has
+      answered, then refresh. Charts come from metrics-server, so you get CPU and
+      memory history without running Prometheus.
+    </p>
+  </div>
+  <figure class="shot">
+    <img src="img/overview.png?v=e2373a46" alt="The overview screen showing cluster usage charts, top consumers, what needs attention and recent warnings" loading="lazy" width="1600" height="1000" />
+  </figure>
+</section>
+
+<section class="feature reverse">
+  <div class="text">
+    <h2>Nothing lands without a diff</h2>
+    <p>
+      The dialog says what will happen in a sentence, what it touches, and shows
+      the exact diff, taken by asking your API server what it <em>would</em>
+      store rather than by comparing text. Defaulted fields and admission webhooks are
+      already accounted for.
+    </p>
+    <p>
+      Approve, or press escape. Either way it is written down, with your name on
+      it.
+    </p>
+  </div>
+  <figure class="shot">
+    <img src="img/gate.png?v=0ab5acea" alt="The review dialog showing a plain-language summary, the blast radius and a unified diff before anything is applied" loading="lazy" width="1600" height="1000" />
+  </figure>
+</section>
+
+<section id="install" class="install">
+  <h2>Install</h2>
+  <p class="lede narrow">
+    Download one file and run it. It reads the kubeconfig you already have and
+    opens your browser.
+  </p>
+  <div class="steps">
+    <div>
+      <span class="num">1</span>
+      <h3>Download</h3>
+      <p>Take the build for your machine from the <a href="https://github.com/jameskomo/clustertrail/releases" rel="noopener">releases page</a>. macOS, Linux and Windows, Intel and ARM.</p>
+    </div>
+    <div>
+      <span class="num">2</span>
+      <h3>Run it</h3>
+      <pre><code>chmod +x clustertrail-*
+./clustertrail-* serve --open</code></pre>
+    </div>
+    <div>
+      <span class="num">3</span>
+      <h3>That is it</h3>
+      <p>No installer, no daemon, nothing added to your clusters. Close the terminal to stop it.</p>
+    </div>
+  </div>
+  <p class="warn">
+    The binaries are not code-signed yet, so macOS and Windows will warn you the
+    first time. On macOS: System Settings, Privacy &amp; Security, <em>Open
+    Anyway</em>. On Windows: More info, then Run anyway. Linux just runs it.
+  </p>
+
+  <h3 class="sub-head">For your pipeline</h3>
+  <pre class="block"><code># fails the build when the cluster and the repository disagree
+clustertrail drift --repo deploy --unmanaged</code></pre>
+
+  <h3 class="sub-head">For your coding agent</h3>
+  <pre class="block"><code>claude mcp add clustertrail -- /path/to/clustertrail mcp</code></pre>
+</section>
+
+<section id="trust" class="trust">
+  <h2>What it can and cannot do</h2>
+  <div class="cols">
+    <div>
+      <h3>It can see exactly what you can</h3>
+      <p>
+        ClusterTrail authenticates as you, with the kubeconfig you already use,
+        including the sign-in plugins for EKS, GKE and AKS. It installs no agent,
+        no operator and no custom resource. If your account cannot read Secrets in
+        a namespace, neither can it. The review is the one you already did for
+        <code>kubectl</code>.
+      </p>
+    </div>
+    <div>
+      <h3>Nothing leaves your machine</h3>
+      <p>
+        The engine listens on loopback only, on a random port, behind a token
+        that changes every launch, and it checks that each request was actually
+        addressed to it. The one exception is the explain pane, which stays
+        inert until a model key is available, and which shows you the exact
+        bytes and waits for you to press send. Secret values are replaced
+        before you see them.
+      </p>
+    </div>
+    <div>
+      <h3>Nothing connects until you ask</h3>
+      <p>
+        Every context in your kubeconfig is listed, but none is contacted until you
+        select it. Starting the app never triggers a cloud sign-in prompt you did
+        not ask for.
+      </p>
+    </div>
+    <div>
+      <h3>The record resists quiet edits</h3>
+      <p>
+        Each audit entry carries the hash of the entry before it, so removing or
+        rewriting one breaks the chain and can be detected. That is tamper
+        evidence, not tamper proofing, and the difference is documented rather
+        than glossed over.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section id="status" class="status">
+  <h2>Where it is</h2>
+  <div class="state">
+    <div class="built">
+      <h3>Built and working</h3>
+      <ul>
+        <li>Twenty-one resource kinds, plus any custom resource, using the columns its CRD declares</li>
+        <li>The What changed timeline, from four sources at once</li>
+        <li>Drift against plain YAML, Kustomize and Helm charts, on screen and in CI</li>
+        <li>Capture what drifted into a branch, and open the pull request</li>
+        <li>The change gate, with dry-run diffs and a hash-chained audit log</li>
+        <li>Helm releases read straight from the cluster, with rollback</li>
+        <li>A read-only MCP server, and an explain pane with your own key</li>
+        <li>One self-contained binary that serves its own interface</li>
+      </ul>
+    </div>
+    <div class="pending">
+      <h3>Pending</h3>
+      <ul>
+        <li><strong>A desktop shell.</strong> It runs in your browser today. The shell adds a dock icon, the keychain and auto-update, and changes nothing else.</li>
+      </ul>
+      <h3 class="later">Deliberately later</h3>
+      <ul>
+        <li>The relay, phone approvals, and an agent that proposes changes into the same review queue. These wait until teams commit to paying for them.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="close">
+  <h2>One binary. Nothing in your cluster.</h2>
+  <p><code class="run">./clustertrail serve --open</code></p>
+</section>
+
+</main>
+
+<footer>
+  <p>
+    <strong>ClusterTrail</strong> is built in the open, Apache 2.0.
+    <a href="https://github.com/jameskomo/clustertrail" rel="noopener">Source on GitHub</a> ·
+    <a href="https://github.com/jameskomo/clustertrail/releases" rel="noopener">Releases</a> ·
+    <a href="https://github.com/jameskomo/clustertrail/blob/main/docs/getting-started.md" rel="noopener">Docs</a> ·
+    <a href="https://github.com/jameskomo/clustertrail/issues" rel="noopener">Report a bug</a> ·
+    <a href="#top">Back to top</a>
+  </p>
+</footer>
+
+</body>
+</html>

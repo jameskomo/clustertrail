@@ -1,0 +1,59 @@
+# Runs on every push and pull request: the Go suite, and a type check and
+# build of the interface.
+name: check
+
+on:
+  push: { branches: [main] }
+  pull_request:
+
+# A pull request from a fork runs this. It gets a read-only token and no
+# secrets, so a change to the build cannot reach anything.
+permissions:
+  contents: read
+
+jobs:
+  engine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with: { go-version: "1.27", cache-dependency-path: engine/go.sum }
+      - run: cd engine && go vet ./...
+      - run: cd engine && go test ./... -cover
+
+  integration:
+    # The paths that need a real API server: the change gate applying things,
+    # drift comparing against live objects, and the timeline reading what the
+    # cluster recorded. A unit test cannot prove any of them.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff # v5
+        with: { go-version: "1.27", cache-dependency-path: engine/go.sum }
+      - uses: helm/kind-action@ef37e7f390d99f746eb8b610417061a60e82a6cc # v1
+        with:
+          cluster_name: clustertrail
+          wait: 120s
+      - name: Run the integration suite
+        env:
+          CLUSTERTRAIL_CONTEXT: kind-clustertrail
+        run: cd engine && go test -tags integration ./internal/integration/ -v
+
+  app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with: { node-version: "22", cache: npm, cache-dependency-path: app/package-lock.json }
+      - run: cd app && npm ci
+      - run: cd app && npx vue-tsc -b
+      - run: cd app && npm run build
+
+      # The demo is the only thing most people see, and its failure mode is
+      # quiet: a screen that refuses a read looks the same as one with
+      # nothing to show. This drives every screen and fails if one stops
+      # answering. Runners ship Chrome, so playwright-core drives that.
+      - name: Build the demo and drive every screen
+        run: |
+          cd app && VITE_DEMO=1 npm run build -- --base=/demo/ --outDir ../site/demo --emptyOutDir
+          cd .. && node scripts/check-demo.mjs

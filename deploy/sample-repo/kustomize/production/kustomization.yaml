@@ -1,0 +1,10 @@
+# The cluster runs two replicas, which is what this overlay declares.
+# Comparing the base instead would report the patch as drift forever.
+resources:
+  - ../base
+patches:
+  - target: { kind: Deployment, name: catalog }
+    patch: |-
+      - op: replace
+        path: /spec/replicas
+        value: 2

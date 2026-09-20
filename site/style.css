@@ -1,0 +1,172 @@
+/* The same tokens the product uses, so the site and the app read as one thing.
+   See docs/design.md. */
+:root {
+  --canvas: #101319;
+  --panel: #171b23;
+  --panel-2: #1c212b;
+  --raised: #232936;
+  --line: #262d3a;
+  --line-2: #323a4a;
+  --text-0: #f2f5f9;
+  --text-1: #cdd4e0;
+  --text-2: #98a1b2;
+  --text-3: #6d768a;
+  --accent: #8b5cf6;
+  --accent-2: #a78bfa;
+  --accent-soft: rgba(139, 92, 246, 0.14);
+  --ok: #34d399;
+  --warn: #fbbf24;
+  --sans: 'Geist Variable', system-ui, sans-serif;
+  --mono: 'Geist Mono Variable', ui-monospace, Menlo, monospace;
+  --measure: 64ch;
+  --page: 1180px;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root {
+    --canvas: #f6f7f9; --panel: #ffffff; --panel-2: #f2f4f7; --raised: #e9edf2;
+    --line: #e2e6ec; --line-2: #cdd4de;
+    --text-0: #0f1420; --text-1: #333c4c; --text-2: #5b6578; --text-3: #8a94a8;
+    --accent: #6d3fe0; --accent-2: #5a2fd0; --accent-soft: rgba(109, 63, 224, 0.10);
+    --ok: #0a8a55; --warn: #a2650a;
+    color-scheme: light;
+  }
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--canvas); color: var(--text-1);
+  font: 17px/1.62 var(--sans); letter-spacing: -0.006em;
+  -webkit-font-smoothing: antialiased;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+h1, h2, h3 { color: var(--text-0); letter-spacing: -0.025em; line-height: 1.15; margin: 0; }
+p { margin: 0 0 1em; max-width: var(--measure); }
+a { color: var(--accent-2); text-decoration-color: color-mix(in srgb, var(--accent-2) 40%, transparent); text-underline-offset: 3px; }
+a:hover { text-decoration-color: currentColor; }
+em { font-style: normal; color: var(--accent-2); }
+strong { color: var(--text-0); font-weight: 600; }
+code { font-family: var(--mono); font-size: 0.88em; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 3px; }
+
+section { max-width: var(--page); margin: 0 auto; padding: 84px 28px; }
+
+/* Header ------------------------------------------------------------ */
+.top {
+  position: sticky; top: 0; z-index: 10;
+  display: flex; align-items: center; gap: 28px;
+  max-width: var(--page); margin: 0 auto; padding: 18px 28px;
+  background: color-mix(in srgb, var(--canvas) 86%, transparent);
+  backdrop-filter: blur(10px);
+}
+.brand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 17px; color: var(--text-0); text-decoration: none; }
+.brand .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.top nav { margin-left: auto; display: flex; gap: 22px; }
+.top nav a { color: var(--text-2); text-decoration: none; font-size: 15px; }
+.top nav a:hover { color: var(--text-0); }
+.top nav a.gh { display: inline-flex; align-items: center; gap: 7px; }
+.top nav a.gh svg { opacity: 0.85; }
+.cta .btn.ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; border: 1px solid var(--line); color: var(--text-1); }
+.cta .btn.ghost:hover { border-color: var(--text-3); color: var(--text-0); }
+
+/* Hero --------------------------------------------------------------- */
+.hero { padding-top: 76px; padding-bottom: 46px; }
+.eyebrow { color: var(--text-3); font-size: 15px; margin-bottom: 18px; }
+h1 { font-size: clamp(42px, 7vw, 76px); font-weight: 600; margin-bottom: 26px; }
+.lede { font-size: 20px; line-height: 1.55; color: var(--text-1); max-width: 58ch; }
+.lede.narrow { max-width: 52ch; }
+.cta { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin: 30px 0 12px; }
+.run {
+  display: inline-block; padding: 13px 18px; border-radius: 8px;
+  background: var(--panel); border: 1px solid var(--line-2);
+  font-family: var(--mono); font-size: 15px; color: var(--text-0);
+}
+.btn {
+  display: inline-block; padding: 13px 22px; border-radius: 8px;
+  background: var(--accent); color: #fff; font-weight: 550; text-decoration: none;
+}
+.btn:hover { filter: brightness(1.08); }
+.sub { color: var(--text-3); font-size: 15px; }
+
+/* Screenshots -------------------------------------------------------- */
+.shot { margin: 0; }
+.shot img {
+  display: block; width: 100%; height: auto; border-radius: 10px;
+  border: 1px solid var(--line); box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+@media (prefers-color-scheme: light) { .shot img { box-shadow: 0 24px 70px rgba(16, 24, 40, 0.14); } }
+.shot figcaption { margin-top: 14px; color: var(--text-3); font-size: 15px; max-width: var(--measure); }
+.shot.wide { max-width: var(--page); margin: 0 auto; padding: 0 28px 24px; }
+
+/* Answers grid ------------------------------------------------------- */
+.answers h2, .install h2, .trust h2, .status h2 { font-size: clamp(28px, 4vw, 38px); font-weight: 600; margin-bottom: 36px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 38px 52px; }
+@media (max-width: 760px) { .grid { grid-template-columns: 1fr; gap: 30px; } }
+.grid h3 { font-size: 19px; font-weight: 600; margin-bottom: 10px; }
+.grid p { font-size: 16.5px; }
+.note { color: var(--text-3); font-size: 15px; border-left: 2px solid var(--accent); padding-left: 12px; margin-bottom: 0; }
+
+/* Feature rows ------------------------------------------------------- */
+.feature { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 56px; align-items: center; }
+.feature.reverse .text { order: 2; }
+.feature h2 { font-size: clamp(26px, 3.4vw, 34px); font-weight: 600; margin-bottom: 18px; }
+.feature p { font-size: 16.5px; }
+
+/* Install ------------------------------------------------------------ */
+.steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; margin: 34px 0 26px; }
+.steps > div { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 22px; }
+.num {
+  display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
+  background: var(--accent-soft); color: var(--accent-2); font-size: 14px; font-weight: 600; margin-bottom: 12px;
+}
+.steps h3 { font-size: 17px; margin-bottom: 8px; }
+.steps p { font-size: 15.5px; margin: 0; }
+pre { margin: 0; overflow-x: auto; }
+.steps pre code, pre.block code {
+  display: block; padding: 14px 16px; border-radius: 8px;
+  background: var(--canvas); border: 1px solid var(--line);
+  font-family: var(--mono); font-size: 14px; color: var(--text-0); white-space: pre;
+}
+@media (prefers-color-scheme: light) { .steps pre code, pre.block code { background: var(--panel-2); } }
+pre.block { max-width: var(--measure); margin-bottom: 8px; }
+.sub-head { font-size: 17px; margin: 30px 0 10px; }
+.warn { color: var(--text-2); font-size: 15.5px; border-left: 2px solid var(--warn); padding-left: 14px; }
+
+/* Trust and status --------------------------------------------------- */
+.cols { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 52px; }
+@media (max-width: 760px) { .cols { grid-template-columns: 1fr; } }
+.cols h3 { font-size: 18px; margin-bottom: 9px; }
+.cols p { font-size: 16px; margin: 0; }
+.state { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px 44px; }
+.state h3 { font-size: 18px; margin-bottom: 12px; }
+.state h3.later { margin-top: 26px; }
+.state ul { margin: 0; padding-left: 20px; }
+.state li { margin-bottom: 9px; font-size: 16px; }
+.built li::marker { color: var(--ok); }
+.pending li::marker { color: var(--warn); }
+
+/* Close and footer --------------------------------------------------- */
+.close { text-align: center; padding-top: 30px; }
+.close h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 600; margin-bottom: 22px; }
+.close p { max-width: none; }
+footer { border-top: 1px solid var(--line); }
+footer p { max-width: var(--page); margin: 0 auto; padding: 26px 28px; color: var(--text-3); font-size: 15px; line-height: 1.9; }
+footer a { color: var(--text-2); }
+footer a:hover { color: var(--text-0); }
+
+@media (max-width: 860px) {
+  section { padding: 60px 22px; }
+  .top { padding: 16px 22px; gap: 16px; }
+  .top nav { gap: 16px; }
+  .top nav a { font-size: 14px; }
+  .feature { grid-template-columns: 1fr; gap: 30px; }
+  .feature.reverse .text { order: 0; }
+  .shot.wide { padding: 0 22px 20px; }
+}
+@media (max-width: 540px) {
+  /* Keep the two that go somewhere: the demo and the source. */
+  .top nav a:not(:nth-last-child(-n + 2)) { display: none; }
+  body { font-size: 16px; }
+}

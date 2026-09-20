@@ -1,0 +1,8 @@
+apiVersion: v1
+data:
+  LOG_LEVEL: debug
+  REGION: eu-west-1
+kind: ConfigMap
+metadata:
+  name: checkout-settings
+  namespace: shop

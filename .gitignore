@@ -1,0 +1,37 @@
+# Cluster credentials, under any name somebody might pick.
+.kind-kubeconfig
+*.kubeconfig
+kubeconfig
+**/kube/config
+.clustertrail-data/
+
+# Local tool state. settings.local.json holds per-machine permissions, and
+# the editor writes temp files beside it.
+.claude/
+
+node_modules/
+dist/
+engine/bin/
+*.log
+
+# The bundled interface is a build artefact; `make bundle` regenerates it.
+engine/internal/ui/dist/*
+!engine/internal/ui/dist/index.html
+.idea/
+
+# The audit log and the local data directory never belong in a repository.
+audit.jsonl
+audit.jsonl.head
+
+# Tunnel tokens and any other local secrets. No .env.example exception here:
+# even the template named the tunnel and the port it routes to.
+.env
+.env.*
+
+# How and where this is hosted is not public. The deployment config, the
+# runbook and the box it runs on live in the private repository, under
+# deploy/site. The public repository holds what the page is, not where it
+# lives: anyone forking it can serve these static files anywhere.
+site/docker-compose.yml
+site/Caddyfile
+site/.env.example

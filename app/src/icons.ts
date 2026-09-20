@@ -1,0 +1,38 @@
+// The product's icon set: 16px grid, 1.5px stroke, currentColor.
+// Hand-authored so the set stays coherent. No imported icon library.
+export const ICONS = {
+  overview: '<path d="M2.6 12.6a5.6 5.6 0 0 1 10.8 0"/><path d="M8 10.4l2.6-3"/><circle cx="8" cy="10.4" r="0.9" fill="currentColor" stroke="none"/>',
+  resources: '<path d="M8 1.9l5.6 3v6.2L8 14.1 2.4 11.1V4.9Z"/><path d="M2.4 4.9L8 7.9l5.6-3M8 7.9v6.2"/>',
+  timeline: '<circle cx="8" cy="8" r="6.1"/><path d="M8 4.9V8l2.2 1.6"/>',
+  changes: '<circle cx="8" cy="8" r="2.1"/><path d="M1.9 8h4M10.1 8h4"/>',
+  drift: '<path d="M10.8 2.4h2.8v2.8M13.4 2.6L9 7M5.2 13.6H2.4v-2.8M2.6 13.4L7 9"/>',
+  helm: '<circle cx="8" cy="8" r="2.4"/><path d="M8 1.4v3.1M8 11.5v3.1M1.4 8h3.1M11.5 8h3.1M3.3 3.3l2.2 2.2M10.5 10.5l2.2 2.2M12.7 3.3l-2.2 2.2M5.5 10.5l-2.2 2.2"/>',
+  forwards: '<path d="M2 8h8.2M6.8 4.8L10.2 8l-3.4 3.2"/><path d="M12.6 3.4v9.2"/>',
+  search: '<circle cx="7" cy="7" r="4.4"/><path d="M10.4 10.4L13.6 13.6"/>',
+  filter: '<path d="M2.2 4.2h11.6M4.7 8h6.6M6.9 11.8h2.2"/>',
+  plus: '<path d="M8 3.2v9.6M3.2 8h9.6"/>',
+  close: '<path d="M4.2 4.2l7.6 7.6M11.8 4.2l-7.6 7.6"/>',
+  chevronDown: '<path d="M4.6 6.4L8 9.8l3.4-3.4"/>',
+  chevronRight: '<path d="M6.4 4.6L9.8 8l-3.4 3.4"/>',
+  chevronUp: '<path d="M4.6 9.6L8 6.2l3.4 3.4"/>',
+  chevronLeft: '<path d="M9.6 4.6L6.2 8l3.4 3.4"/>',
+  sortAsc: '<path d="M8 12.6V3.4M4.6 6.2L8 3.2l3.4 3"/>',
+  sortDesc: '<path d="M8 3.4v9.2M4.6 9.8L8 12.8l3.4-3"/>',
+  sun: '<circle cx="8" cy="8" r="3"/><path d="M8 1.6v1.7M8 12.7v1.7M1.6 8h1.7M12.7 8h1.7M3.5 3.5l1.2 1.2M11.3 11.3l1.2 1.2M12.5 3.5l-1.2 1.2M4.7 11.3l-1.2 1.2"/>',
+  moon: '<path d="M13.4 9.4A5.7 5.7 0 0 1 6.6 2.6a5.7 5.7 0 1 0 6.8 6.8Z"/>',
+  monitor: '<rect x="2.2" y="3" width="11.6" height="8.4" rx="1.4"/><path d="M6.2 13.6h3.6M8 11.4v2.2"/>',
+  terminal: '<rect x="2.2" y="3.2" width="11.6" height="9.6" rx="1.4"/><path d="M5 6.4l2 1.9-2 1.9M8.6 10.4H11"/>',
+  logs: '<path d="M3 4.4h10M3 8h10M3 11.6h6"/>',
+  file: '<path d="M4.2 1.9h4.6l3 3v9.2H4.2Z"/><path d="M8.8 1.9v3h3"/>',
+  check: '<path d="M3 8.4l3.2 3.1L13 4.8"/>',
+  warning: '<path d="M8 2.4l6.3 10.8H1.7Z"/><path d="M8 6.6v3M8 11.4v.2"/>',
+  info: '<circle cx="8" cy="8" r="6.1"/><path d="M8 7.4V11M8 5v.2"/>',
+  external: '<path d="M6.6 3.4H3.4v9.2h9.2V9.4M9.4 3.4h3.2v3.2M12.3 3.7L7.6 8.4"/>',
+  refresh: '<path d="M13.6 8A5.6 5.6 0 1 1 12 4.2M13.4 2.2v2.6h-2.6"/>',
+  trash: '<path d="M2.6 4.1h10.8M6.1 4.1V2.6h3.8v1.5M4.1 4.1l.7 9.3h6.4l.7-9.3M6.6 6.6v4.3M9.4 6.6v4.3"/>',
+  scale: '<path d="M5 13.4V2.6M2.8 4.8L5 2.6l2.2 2.2M11 2.6v10.8M8.8 11.2l2.2 2.2 2.2-2.2"/>',
+  copy: '<rect x="5.4" y="5.4" width="7.6" height="7.6" rx="1.4"/><path d="M10.6 5.4V3.4a1 1 0 0 0-1-1H3.4a1 1 0 0 0-1 1v6.2a1 1 0 0 0 1 1h2"/>',
+  dot: '<circle cx="8" cy="8" r="3" fill="currentColor" stroke="none"/>',
+} as const
+
+export type IconName = keyof typeof ICONS
